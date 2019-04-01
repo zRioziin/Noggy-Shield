@@ -1,0 +1,1 @@
+google.com|wikipedia.org|exception.org|this-wont-be-scanned.com

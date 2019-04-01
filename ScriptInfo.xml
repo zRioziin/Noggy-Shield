@@ -1,0 +1,17 @@
+<ScriptInfo>
+	<Information>
+		<Name>XMSN Defense</Name>
+		<Description>Making Escargot a safer place!</Description>
+		<AboutUrl>http://tocadorio.cf/xmsn-defense/</AboutUrl>
+		<Version>4</Version>
+	</Information>
+	
+	<ScriptMenu>
+		<MenuEntry Id="ManScan">Scan a link manually</MenuEntry>
+		<MenuEntry Id="AddEx">Add an exception</MenuEntry>
+		<MenuEntry Id="DelEx">Delete an exception</MenuEntry>
+		<Separator/>
+		<MenuEntry Id="Config">Preferences</MenuEntry>
+		<MenuEntry Id="About">About XMSN Defense</MenuEntry>
+	</ScriptMenu>
+</ScriptInfo>

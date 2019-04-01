@@ -1,0 +1,3117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Messenger Plus! Live - Interface Schema - Version 4.71 -->
+<xs:schema xmlns:pli="urn:msgplus:interface" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:msgplus:interface" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Interfaces">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="GlobalColors" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="GlobalColor" type="pli:GlobalColor" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Window" type="pli:Window" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="Name" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Version" type="xs:float"/>
+			<xs:attribute name="Description" type="xs:string"/>
+		</xs:complexType>
+		<xs:key name="keyWindowName">
+			<xs:selector xpath="Window"/>
+			<xs:field xpath="@Name"/>
+		</xs:key>
+	</xs:element>
+	<xs:complexType name="Window">
+		<xs:sequence>
+			<xs:element name="Attributes" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="TopMost" type="xs:boolean" default="false" minOccurs="0"/>
+						<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>If true, the window accepts drag and drops.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="NoActivate" type="xs:boolean" default="false" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>If true, the window does not activate when selected.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ShowInTaskbar" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="SetForeground" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="Caption" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The Caption of the window is the name displayed by Windows is various places like the taskbar.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="LockOnClick" type="xs:boolean" default="true" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Set to true to allow the user to move the window by clicking anywhere in it.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TitleBar" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="AllowMinimize" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="AllowMaximize" type="xs:boolean" default="false" minOccurs="0"/>
+						<xs:element name="AllowClose" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="DisableOnDeactivate" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="DefaultBackground" type="xs:boolean" default="true" minOccurs="0"/>
+						<xs:element name="Title" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Prefix" default="Full" minOccurs="0">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Image"/>
+												<xs:enumeration value="Software"/>
+												<xs:enumeration value="Full"/>
+												<xs:enumeration value="None"/>
+												<xs:enumeration value="Neutral"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="Text" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="TopMargin" type="xs:int" default="0"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Position">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Resizeable" minOccurs="0">
+							<xs:complexType>
+								<xs:all>
+									<xs:annotation>
+										<xs:documentation>The size specified here is for the window's frame or its client area, depending on the attribute group being used.</xs:documentation>
+									</xs:annotation>
+									<xs:element name="MinWidth">
+										<xs:simpleType>
+											<xs:restriction base="xs:unsignedInt">
+												<xs:minExclusive value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="MinHeight">
+										<xs:simpleType>
+											<xs:restriction base="xs:unsignedInt">
+												<xs:minExclusive value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:all>
+								<xs:attribute name="Allowed" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="NotResizeable"/>
+											<xs:enumeration value="Horizontal"/>
+											<xs:enumeration value="Vertical"/>
+											<xs:enumeration value="BothSides"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="IsAbsolute" type="xs:boolean" default="false" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>By default, coordinates are in dialog units. This parameter changes the unit to pixels.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:all>
+					<xs:attributeGroup ref="pli:ScreenPos"/>
+					<xs:attributeGroup ref="pli:ClientPos">
+						<xs:annotation>
+							<xs:documentation>Use this group to specify the size of the window's client area. Use this by default</xs:documentation>
+						</xs:annotation>
+					</xs:attributeGroup>
+					<xs:attribute name="InitialPos" use="optional" default="CenteredParent">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Normal"/>
+								<xs:enumeration value="CenteredParent"/>
+								<xs:enumeration value="CenteredScreen"/>
+								<xs:enumeration value="Minimised"/>
+								<xs:enumeration value="Maximised"/>
+								<xs:enumeration value="Random"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:choice>
+				<xs:annotation>
+					<xs:documentation>Choice of template</xs:documentation>
+				</xs:annotation>
+				<xs:element name="DialogTmpl">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="BkgBrightness" default="Default" minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Default"/>
+										<xs:enumeration value="Light"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="BottomBar" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:choice>
+											<xs:element name="LeftControls" minOccurs="0">
+												<xs:complexType>
+													<xs:sequence minOccurs="0" maxOccurs="unbounded">
+														<xs:element name="Margin" type="xs:unsignedInt" default="10" minOccurs="0">
+															<xs:annotation>
+																<xs:documentation>Adjusts the space between this button and the last one.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element name="Control" type="pli:Control"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:choice>
+										<xs:choice>
+											<xs:element name="RightControls" minOccurs="0">
+												<xs:complexType>
+													<xs:sequence minOccurs="0" maxOccurs="unbounded">
+														<xs:element name="Margin" type="xs:unsignedInt" default="10" minOccurs="0">
+															<xs:annotation>
+																<xs:documentation>Adjusts the space between this button and the next one.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element name="Control" type="pli:Control"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:choice>
+									</xs:sequence>
+									<xs:attribute name="Style" use="required">
+										<xs:annotation>
+											<xs:documentation>Changes the look of the bottom bar.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="None"/>
+												<xs:enumeration value="Plain"/>
+												<xs:enumeration value="Light"/>
+												<xs:enumeration value="Default"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="WindowTmpl">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Corners" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="RoundSize" default="7" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Only valid if shape is Round. Must be an odd value.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:unsignedInt">
+													<xs:minInclusive value="1"/>
+													<xs:maxInclusive value="31"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="Shape" use="optional" default="Round">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Round"/>
+												<xs:enumeration value="Rectangular"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Borders" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Color" type="pli:Color" minOccurs="0"/>
+									</xs:sequence>
+									<xs:attribute name="Type" default="Simple">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="None"/>
+												<xs:enumeration value="Simple"/>
+												<xs:enumeration value="Dialog"/>
+												<xs:enumeration value="DialogLight"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:choice>
+								<xs:element name="BackgroundColor" minOccurs="0">
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="pli:Color"/>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="BkgBrightness" default="Default" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Default"/>
+											<xs:enumeration value="Light"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:choice>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ChildTmpl">
+					<xs:annotation>
+						<xs:documentation>A window with this template must not have Attributes or TitleBar. It is only meant to be included in other windows.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType/>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="Elements" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ElementGroups" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ElementGroup" type="pli:ElementGroup" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Controls" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Control" type="pli:Control" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" use="required">
+			<xs:annotation>
+				<xs:documentation>No spaces allowed. For scripts windows, punctuation is replaced by underscores.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Version" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>Used by the program to know is a custom interface is up to date.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="TranslationSection" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Use to override the name of the section where the translation for this window will be read.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Description" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="Control" abstract="true">
+		<xs:sequence>
+			<xs:element name="Position">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Anchor" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Changes the position/size of the control when the parent is resized.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:attribute name="Horizontal" default="LeftFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="LeftFixed"/>
+											<xs:enumeration value="RightFixed"/>
+											<xs:enumeration value="LeftRightFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="Vertical" default="TopFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="TopFixed"/>
+											<xs:enumeration value="BottomFixed"/>
+											<xs:enumeration value="TopBottomFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Units" default="AllDialog" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>By default, all coordinates are in dialog units. This parameter changes the unit to pixels.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="AllDialog"/>
+									<xs:enumeration value="PosPixels"/>
+									<xs:enumeration value="SizePixels"/>
+									<xs:enumeration value="AllPixels"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="TranslationAdjust" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Allows the control to change size dynamically depending on the size of the translated text.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="StaticCtrlIDLeft" type="xs:string" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>ID of the static control which width will be used to adjust the left position of this control.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Origins" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Allows to specify a size that's relative to the opposite border of the window.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:attribute name="Width" default="Normal">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Normal"/>
+											<xs:enumeration value="Reverse"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="Height" default="Normal">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Normal"/>
+											<xs:enumeration value="Reverse"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:all>
+					<xs:attribute name="Left" type="xs:int" use="required"/>
+					<xs:attribute name="Top" type="xs:int" use="required"/>
+					<xs:attribute name="Width" type="xs:unsignedInt" use="required"/>
+					<xs:attribute name="Height" type="xs:unsignedInt" use="optional">
+						<xs:annotation>
+							<xs:documentation>May not be needed depending on the control.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Help" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" use="required">
+			<xs:annotation>
+				<xs:documentation>No spaces allowed</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Enabled" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="Visible" type="xs:boolean" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="Element" abstract="true">
+		<xs:sequence>
+			<xs:element name="Position">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Anchor" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Changes the position/size of the element when the parent is resized.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:attribute name="Horizontal" default="LeftFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="LeftFixed"/>
+											<xs:enumeration value="RightFixed"/>
+											<xs:enumeration value="LeftRightFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="Vertical" default="TopFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="TopFixed"/>
+											<xs:enumeration value="BottomFixed"/>
+											<xs:enumeration value="TopBottomFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Units" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>By default, all coordinates are in dialog units. This parameter changes the unit to pixels.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="AllDialog"/>
+									<xs:enumeration value="PosPixels"/>
+									<xs:enumeration value="SizePixels"/>
+									<xs:enumeration value="AllPixels"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:all>
+					<xs:attribute name="Left" type="xs:int" use="required"/>
+					<xs:attribute name="Top" type="xs:int" use="required"/>
+					<xs:attribute name="Width" type="xs:unsignedInt" use="optional"/>
+					<xs:attribute name="Height" type="xs:unsignedInt">
+						<xs:annotation>
+							<xs:documentation>May not be needed depending on the element.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" use="required">
+			<xs:annotation>
+				<xs:documentation>No spaces allowed</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Visible" type="xs:boolean" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="ElementGroup">
+		<xs:sequence>
+			<xs:element name="Position">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="Anchor" minOccurs="0">
+							<xs:complexType>
+								<xs:attribute name="Horizontal" default="LeftFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="LeftFixed"/>
+											<xs:enumeration value="RightFixed"/>
+											<xs:enumeration value="LeftRightFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="Vertical" default="TopFixed">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="TopFixed"/>
+											<xs:enumeration value="BottomFixed"/>
+											<xs:enumeration value="TopBottomFixed"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Units" default="AllDialog" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="AllDialog"/>
+									<xs:enumeration value="PosPixels"/>
+									<xs:enumeration value="SizePixels"/>
+									<xs:enumeration value="AllPixels"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:all>
+					<xs:attribute name="Left" type="xs:int" use="required"/>
+					<xs:attribute name="Top" type="xs:int" use="required"/>
+					<xs:attribute name="Width" type="xs:unsignedInt" use="required"/>
+					<xs:attribute name="Height" type="xs:unsignedInt" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Transparency" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="General" default="255" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>General transparency value applied on the whole group.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:unsignedInt">
+									<xs:minInclusive value="0"/>
+									<xs:maxInclusive value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="FadeEffect" default="None" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="None"/>
+									<xs:enumeration value="Showing"/>
+									<xs:enumeration value="Hiding"/>
+									<xs:enumeration value="ShowingHiding"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="FadeDuration" default="1000" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>In milliseconds.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:unsignedInt">
+									<xs:minInclusive value="100"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Elements">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Element" type="pli:Element" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" use="required">
+			<xs:annotation>
+				<xs:documentation>No spaces allowed</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Visible" type="xs:boolean" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="Image">
+		<xs:sequence>
+			<xs:element name="Name">
+				<xs:annotation>
+					<xs:documentation>This name represents either a resource or a file name without extension.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Format" default="PNG" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="PNG"/>
+						<xs:enumeration value="JPEG"/>
+						<xs:enumeration value="GIF"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ColorInfo">
+		<xs:choice minOccurs="0">
+			<xs:sequence>
+				<xs:element name="Red">
+					<xs:simpleType>
+						<xs:restriction base="xs:unsignedByte">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Green">
+					<xs:simpleType>
+						<xs:restriction base="xs:unsignedByte">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Blue">
+					<xs:simpleType>
+						<xs:restriction base="xs:unsignedByte">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Alpha" default="255" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>For transparency.
+Not always supported.</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:unsignedByte">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="BaseColor">
+				<xs:annotation>
+					<xs:documentation>This is the color used by Messenger to display its background. Can change depending on the user.
+
+Not supported by every situation.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Hue" default="1" minOccurs="0">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="Combine" use="optional" default="percent">
+											<xs:annotation>
+												<xs:documentation>Percent: a value between 0 and 1 will decrease the amount (for example, 0.75 will make it 75% of its original value), a value above 1 will increase the amount. Power: the value can be negative or positive and is used to raise the original value with a power of the specified exponent.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="percent"/>
+													<xs:enumeration value="power"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Saturation" default="1" minOccurs="0">
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="Combine" use="optional" default="percent">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="percent"/>
+													<xs:enumeration value="power"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Brightness" default="1" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Hue, Saturation and Brightness modify the existing HSB of the color (they don't replace them).</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:double">
+										<xs:attribute name="Combine" use="optional" default="percent">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="percent"/>
+													<xs:enumeration value="power"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Transparency" default="255" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The transparency is directly applied to the color if specified.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:unsignedByte">
+									<xs:minInclusive value="0"/>
+									<xs:maxInclusive value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="Color">
+		<xs:complexContent>
+			<xs:extension base="pli:ColorInfo">
+				<xs:sequence minOccurs="0">
+					<xs:element name="GlobalColor" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GlobalColor">
+		<xs:complexContent>
+			<xs:extension base="pli:ColorInfo">
+				<xs:attribute name="Id" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Menu">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:choice>
+				<xs:element name="MenuEntry">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="Id" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:minLength value="1"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SubMenu">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="pli:Menu">
+								<xs:attribute name="Label" type="xs:string"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Separator"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="Id" use="required">
+			<xs:annotation>
+				<xs:documentation>No spaces allowed</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="EditControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Align" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="Multiline" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="VScroll" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="NumbersOnly" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="IsPassword" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="ReadOnly" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="WantReturn" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If true, the edit box will process the Enter Key.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="HideSelection" type="xs:boolean" default="true" minOccurs="0"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="DefaultText" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ScrollBarControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="VerticalBar">
+							<xs:complexType>
+								<xs:attribute name="Align" use="optional" default="Right">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Left"/>
+											<xs:enumeration value="Right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="HorizontalBar">
+							<xs:complexType>
+								<xs:attribute name="Align" use="optional" default="Bottom">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Top"/>
+											<xs:enumeration value="Bottom"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ListBoxControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="MultipleSel" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="ReadOnly" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Prevents the user to select the list box's items.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="AutoSort" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Automatically sorts the items alphabetically.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="OwnerDraw" default="None" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="None"/>
+											<xs:enumeration value="Fixed"/>
+											<xs:enumeration value="Variable"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Items" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Items to be added at creation.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Item" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:string">
+												<xs:attribute name="Id" type="xs:string" use="optional">
+													<xs:annotation>
+														<xs:documentation>This id can used internally for some Messenger Plus! features such as skins.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RichEditControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Align" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="Multiline" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="NumbersOnly" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="IsPassword" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="ReadOnly" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="WantReturn" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If true, the edit box will process the Enter Key.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="HideSelection" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="HorizontalScroll" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If false, the text wraps automatically.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="AlwaysShowScrollBars" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="TextMode" default="Plain Text" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Plain Text"/>
+											<xs:enumeration value="Rich Text"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="LeftIdent" type="xs:unsignedInt" default="4" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Left margin indentation for the whole control, in pixels.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="AllowRTL" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If false, the control will not be right-to-left in a right-to-left window.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="BackgroundColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="DefaultText" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="HotKeyControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SliderControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Orientation" default="Horizontal" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If Vertical, the Width and Height are inversed.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Horizontal"/>
+											<xs:enumeration value="Vertical"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="TickMarks" default="Bottom" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="None"/>
+											<xs:enumeration value="Top"/>
+											<xs:enumeration value="Bottom"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="AutoTicks" default="25" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>This is a percentage of the total range. Set to 0 to disable auto ticks.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:unsignedByte">
+											<xs:minInclusive value="0"/>
+											<xs:maxInclusive value="100"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="EnableSelRange" type="xs:boolean" default="false" minOccurs="0"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Range" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Minimum" type="xs:int" default="0"/>
+								<xs:element name="Maximum" type="xs:int" default="100"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ProgressControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Orientation" default="Horizontal" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If Vertical, the Width and Height are inversed.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Horizontal"/>
+											<xs:enumeration value="Vertical"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="Range" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Creates a real progress bar with a defined range. This is the default.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Minimum" type="xs:int" default="0"/>
+									<xs:element name="Maximum" type="xs:int" default="100"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Marquee" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Creates a progress bar with a marker that moves automatically.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DateTimeControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="AllowCalendar" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="ShowNone" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Add a checkbox to disable the control.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Format">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="Predefined">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="LongDate"/>
+											<xs:enumeration value="ShortDate"/>
+											<xs:enumeration value="Time"/>
+											<xs:enumeration value="DateTime"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Custom">
+									<xs:annotation>
+										<xs:documentation>See MSDN for more information.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:minLength value="1"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SpinControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Orientation" default="Horizontal" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Horizontal"/>
+											<xs:enumeration value="Vertical"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="AllowWrap" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Automaticaly wrap from the maximum to the minimum value when reached.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Range" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Minimum" type="xs:int"/>
+								<xs:element name="Maximum" type="xs:int"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ListViewControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AlwaysShowSelection" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AutoSort" default="NoAutoSort" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="NoAutoSort"/>
+											<xs:enumeration value="Ascending"/>
+											<xs:enumeration value="Descending"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="AllowEditText" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="MultipleSel" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AutoTip" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Automatically display a tooltip for labels that are too large.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="HotTrack" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Display labels like links.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:boolean">
+												<xs:attribute name="UnderlineMode" default="Cold">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="Cold"/>
+															<xs:enumeration value="Hot"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="LargeIconView">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ItemsAlign" default="Top" minOccurs="0">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Left"/>
+												<xs:enumeration value="Top"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WrapText" type="xs:boolean" default="true" minOccurs="0"/>
+									<xs:element name="HasCheckboxes" type="xs:boolean" default="false" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="SmallIconView">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ItemsAlign" default="Top" minOccurs="0">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Left"/>
+												<xs:enumeration value="Top"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="WrapText" type="xs:boolean" default="true" minOccurs="0"/>
+									<xs:element name="HasCheckboxes" type="xs:boolean" default="false" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ListView">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="HasCheckboxes" type="xs:boolean" default="false" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ReportView">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ColumnHeader" type="xs:boolean" default="true" minOccurs="0"/>
+									<xs:element name="SortColHeader" type="xs:boolean" default="false" minOccurs="0"/>
+									<xs:element name="HeaderDragDrop" type="xs:boolean" default="false" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Allow to move the columns with drag and drop.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="HasCheckboxes" type="xs:boolean" default="false" minOccurs="0"/>
+									<xs:element name="FullRowSelect" type="xs:boolean" default="true" minOccurs="0"/>
+									<xs:element name="ShowGridLines" type="xs:boolean" default="false" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="TileView"/>
+					</xs:choice>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Images" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The images here must be 32bits. Each list of image needs to have images of the same size.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LargeIcons" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:complexContent>
+														<xs:extension base="pli:Image">
+															<xs:sequence>
+																<xs:element name="AllowAutoMirror" type="xs:boolean" default="false" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>If true, the image will automatically be mirrored (inversed on the X axis) if the parent window is right-to-left.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="Id" type="xs:string" use="required"/>
+															<xs:attribute name="IsOverlay" type="xs:boolean" default="false">
+																<xs:annotation>
+																	<xs:documentation>An overlay is an icon displayed transparently on top of another one.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:extension>
+													</xs:complexContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="SmallIcons" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:complexContent>
+														<xs:extension base="pli:Image">
+															<xs:sequence>
+																<xs:element name="AllowAutoMirror" type="xs:boolean" default="false" minOccurs="0"/>
+															</xs:sequence>
+															<xs:attribute name="Id" type="xs:string" use="required"/>
+															<xs:attribute name="IsOverlay" type="xs:boolean" default="false">
+																<xs:annotation>
+																	<xs:documentation>An overlay is an icon displayed transparently on top of another one.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:extension>
+													</xs:complexContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="StateIcons" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>A state icon is displayed next to another one.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:complexContent>
+														<xs:extension base="pli:Image">
+															<xs:sequence>
+																<xs:element name="AllowAutoMirror" type="xs:boolean" default="false" minOccurs="0"/>
+															</xs:sequence>
+															<xs:attribute name="Id" type="xs:string" use="required"/>
+														</xs:extension>
+													</xs:complexContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Columns" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Column" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="ColumnId">
+												<xs:annotation>
+													<xs:documentation>Uniquely identifies the column internally.</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:minLength value="1"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="Align" default="Left" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>The first column must be left aligned.</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="Left"/>
+														<xs:enumeration value="Center"/>
+														<xs:enumeration value="Right"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="Label" minOccurs="0">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string"/>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="HeaderImage" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>The value of this element must be an image name from the SmallIcons list.</xs:documentation>
+												</xs:annotation>
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:string">
+															<xs:attribute name="Align" default="Left">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="Left"/>
+																		<xs:enumeration value="Right"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="Width" type="xs:unsignedInt" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>This parameter is optional only when only 1 column is present (relative width) or for the last column of the list (absolute width).</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="WidthFormat" default="Relative">
+								<xs:annotation>
+									<xs:documentation>Specifies if the width of the columns is in percentage of the list's width or in pixels.</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Relative"/>
+										<xs:enumeration value="Absolute"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Groups" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Group" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="GroupId">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:minLength value="1"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="Align" default="Left" minOccurs="0">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="Left"/>
+														<xs:enumeration value="Center"/>
+														<xs:enumeration value="Right"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+											<xs:element name="Label" type="xs:string" minOccurs="0"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TreeViewControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AlwaysShowSelection" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AllowEditText" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="HotTrack" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Display labels like links.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:boolean"/>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="SingleExpand" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="HasButtons" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="HasLines" default="true" minOccurs="0">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:boolean">
+												<xs:attribute name="LineAtRoot" type="xs:boolean" default="true"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="HasCheckboxes" type="xs:boolean" default="false" minOccurs="0"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Images" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The images here must be 32bits. Each list of image needs to have images of the same size.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="NormalIcons" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:complexContent>
+														<xs:extension base="pli:Image">
+															<xs:attribute name="Id" type="xs:string" use="required"/>
+															<xs:attribute name="IsOverlay" type="xs:boolean" default="false">
+																<xs:annotation>
+																	<xs:documentation>An overlay is an icon displayed transparently on top of another one.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:extension>
+													</xs:complexContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="StateIcons" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>A state icon is displayed next to another one.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:complexContent>
+														<xs:extension base="pli:Image">
+															<xs:attribute name="Id" type="xs:string" use="required"/>
+														</xs:extension>
+													</xs:complexContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ComboBoxControl">
+		<xs:annotation>
+			<xs:documentation>Note: the height specified for the control is used to set the height of the dropdown list.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="AcceptFiles" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AllowEdit" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AutoSort" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Automatically sorts the items alphabetically. Only valid when no image is specified.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="OwnerDraw" default="None" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="None"/>
+											<xs:enumeration value="Fixed"/>
+											<xs:enumeration value="Variable"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Images" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Every image needs to have the same size.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Image" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="pli:Image">
+												<xs:attribute name="Id" type="xs:string" use="required"/>
+											</xs:extension>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Items" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Items to be added at creation.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Item" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="xs:string">
+												<xs:attribute name="Id" type="xs:string" use="optional">
+													<xs:annotation>
+														<xs:documentation>This id can used internally for some Messenger Plus! features such as skins.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ButtonControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Align" default="center" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="IsDefault" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>This button is clicked when the user presses Enter.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="MoveWhenPushed" default="0" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Move the button when it's pressed by this number of pixel (only for the default look).</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:unsignedByte">
+											<xs:minInclusive value="0"/>
+											<xs:maxInclusive value="3"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="DwmAnimations" default="Default" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Specifies if transition animations are allowed for this control in Windows Vista and above.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Default"/>
+											<xs:enumeration value="Allow"/>
+											<xs:enumeration value="Disallow"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:sequence>
+							<xs:choice minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>The default is StandardLook</xs:documentation>
+								</xs:annotation>
+								<xs:element name="StandardLook">
+									<xs:complexType>
+										<xs:attribute name="Template" default="Grey">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="Grey"/>
+													<xs:enumeration value="Blue"/>
+													<xs:enumeration value="Transparent"/>
+													<xs:enumeration value="Transparent2"/>
+													<xs:enumeration value="Clear"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="CustomGradient">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Normal">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Color1" type="pli:Color"/>
+														<xs:element name="Color2" type="pli:Color"/>
+														<xs:element name="ColorBorder" type="pli:Color" minOccurs="0">
+															<xs:annotation>
+																<xs:documentation>If not present, Color2 is used instead.</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element name="Shadow" type="xs:boolean" default="true" minOccurs="0"/>
+													</xs:sequence>
+													<xs:attribute name="Interpolation" default="Smooth">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="Smooth"/>
+																<xs:enumeration value="Average"/>
+																<xs:enumeration value="Strong"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="Hot">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Color1" type="pli:Color"/>
+														<xs:element name="Color2" type="pli:Color"/>
+														<xs:element name="ColorBorder" type="pli:Color" minOccurs="0"/>
+														<xs:element name="Shadow" type="xs:boolean" default="true" minOccurs="0"/>
+													</xs:sequence>
+													<xs:attribute name="Interpolation" default="Smooth">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="Smooth"/>
+																<xs:enumeration value="Average"/>
+																<xs:enumeration value="Strong"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="Pushed">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Color1" type="pli:Color"/>
+														<xs:element name="Color2" type="pli:Color"/>
+														<xs:element name="ColorBorder" type="pli:Color" minOccurs="0"/>
+														<xs:element name="Shadow" type="xs:boolean" default="true" minOccurs="0"/>
+													</xs:sequence>
+													<xs:attribute name="Interpolation" default="Smooth">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:enumeration value="Smooth"/>
+																<xs:enumeration value="Average"/>
+																<xs:enumeration value="Strong"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+							<xs:element name="Image" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Only valid is Align is Center</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="pli:Image">
+											<xs:sequence>
+												<xs:element name="AllowAutoMirror" type="xs:boolean" default="true" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>If true, the image will automatically be mirrored (inversed on the X axis) if the parent window is right-to-left.</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="Align" default="Left">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="Left"/>
+														<xs:enumeration value="Right"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+											<xs:attribute name="Margin" type="xs:int" default="2"/>
+										</xs:extension>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Font" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Changes various settings of the default font.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="FaceName" type="xs:string" minOccurs="0"/>
+										<xs:element name="Bold" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Italic" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Underlined" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Strikeout" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Size" type="xs:double" default="8" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>The size is in points.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TextColor" type="pli:Color" minOccurs="0"/>
+							<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+						<xs:element name="CustomLook">
+							<xs:annotation>
+								<xs:documentation>When using custom look, the control cannot be resized.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FocusRect">
+										<xs:annotation>
+											<xs:documentation>Margins used to compute the position of the focus rectangle based on the position of the control.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Left" type="xs:int"/>
+												<xs:element name="Top" type="xs:int"/>
+												<xs:element name="Right" type="xs:int"/>
+												<xs:element name="Bottom" type="xs:int"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Base" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Base elements are displayed for every state.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:sequence>
+										<xs:element name="Normal">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Hot">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Pushed">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Disabled" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RadioControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="IsNewGroup" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Set to true for the first radio in a group.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="DwmAnimations" default="Default" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Specifies if transition animations are allowed for this control in Windows Vista and above.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Default"/>
+											<xs:enumeration value="Allow"/>
+											<xs:enumeration value="Disallow"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Default look</xs:documentation>
+							</xs:annotation>
+							<xs:element name="Font" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Changes various settings of the default font.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="FaceName" type="xs:string" minOccurs="0"/>
+										<xs:element name="Bold" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Italic" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Underlined" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Strikeout" type="xs:boolean" minOccurs="0"/>
+										<xs:element name="Size" type="xs:double" default="8" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>The size is in points.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TextColor" type="pli:Color" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Alpha not supported.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+						<xs:element name="CustomLook">
+							<xs:annotation>
+								<xs:documentation>When using custom look, the control cannot be resized.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FocusRect">
+										<xs:annotation>
+											<xs:documentation>Margins used to compute the position of the focus rectangle based on the position of the control.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Left" type="xs:int"/>
+												<xs:element name="Top" type="xs:int"/>
+												<xs:element name="Right" type="xs:int"/>
+												<xs:element name="Bottom" type="xs:int"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Base" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Base elements are displayed for every state.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:sequence>
+										<xs:element name="Normal">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Hot">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Pushed">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Disabled" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CheckBoxControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Has3States" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="DwmAnimations" default="Default" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Specifies if transition animations are allowed for this control in Windows Vista and above.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Default"/>
+											<xs:enumeration value="Allow"/>
+											<xs:enumeration value="Disallow"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Default look</xs:documentation>
+							</xs:annotation>
+							<xs:element name="TextColor" type="pli:Color" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Alpha not supported.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+						<xs:element name="CustomLook">
+							<xs:annotation>
+								<xs:documentation>When using custom look, the control cannot be resized.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="FocusRect">
+										<xs:annotation>
+											<xs:documentation>Margins used to compute the position of the focus rectangle based on the position of the control.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Left" type="xs:int"/>
+												<xs:element name="Top" type="xs:int"/>
+												<xs:element name="Right" type="xs:int"/>
+												<xs:element name="Bottom" type="xs:int"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Base" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Base elements are displayed for every state.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:sequence>
+										<xs:element name="Normal">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="ThirdChecked" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Hot">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="ThirdChecked" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Pushed">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="ThirdChecked" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Disabled" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Base" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>Displayed for checked and unchecked.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Unchecked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="Checked">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="ThirdChecked" minOccurs="0">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Element" type="pli:Element" minOccurs="0" maxOccurs="unbounded"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="MenuButtonControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AlwaysDisplayBorder" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="AdjustArrowPos" type="xs:boolean" default="false" minOccurs="0"/>
+								<xs:element name="DwmAnimations" default="Default" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Specifies if transition animations are allowed for this control in Windows Vista and above.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Default"/>
+											<xs:enumeration value="Allow"/>
+											<xs:enumeration value="Disallow"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Menu" minOccurs="0">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="pli:Menu">
+									<xs:attribute name="HPos" default="CenterLeft">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Left"/>
+												<xs:enumeration value="CenterLeft"/>
+												<xs:enumeration value="CenterRight"/>
+												<xs:enumeration value="Right"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="VPos" default="Top">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="Top"/>
+												<xs:enumeration value="Bottom"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:extension>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Image" minOccurs="0">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="pli:Image">
+									<xs:attribute name="Margin" type="xs:int" default="2"/>
+								</xs:extension>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="TextColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StaticControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Align" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="AlignRTL" default="left" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If specified, the control will be aligned with this setting instead if the window is right-to-left.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="VAlign" default="top" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="top"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="bottom"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Trimming" default="EllipsisChar" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Controls how to display the end of a string that does not fit in the given coordinates.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Character"/>
+											<xs:enumeration value="Word"/>
+											<xs:enumeration value="EllipsisChar"/>
+											<xs:enumeration value="EllipsisWord"/>
+											<xs:enumeration value="EllipsisPath"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:choice>
+									<xs:element name="WrapText" type="xs:boolean" default="true" minOccurs="0"/>
+									<xs:element name="AutoAdjustWidth" type="xs:boolean" default="false" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>The width of the control will be reduced if necessary so that the caption fits exactly.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice minOccurs="0">
+						<xs:element name="Color" type="pli:Color">
+							<xs:annotation>
+								<xs:documentation>If this element is not present, the default color will be used.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Transparency" default="255">
+							<xs:annotation>
+								<xs:documentation>Changes the Alpha value of the default color.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:unsignedInt">
+									<xs:minInclusive value="0"/>
+									<xs:maxInclusive value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:choice>
+					<xs:element name="BackgroundColor" type="pli:Color" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>This element is required if using a transparent text color.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Font" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Changes various settings of the default font.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="FaceName" type="xs:string" minOccurs="0"/>
+								<xs:element name="Bold" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Italic" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Underlined" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Strikeout" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Size" type="xs:double" default="8" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The size is in points.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RichStaticControl">
+		<xs:annotation>
+			<xs:documentation>This is a static control displaying the content of a windowless rich edit control.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Align" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="TrimText" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Controls how to display the end of a string that does not fit in the given coordinates.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="WrapText" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If WrapText is enabled, trimming is disabled.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Color" type="pli:Color" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Transparency is not supported.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BackgroundColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Font" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="FaceName" type="xs:string" minOccurs="0"/>
+								<xs:element name="Bold" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Italic" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Underlined" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Strikeout" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Size" type="xs:unsignedInt" minOccurs="0"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LinkControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="Align" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Underline" default="Always" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Never"/>
+											<xs:enumeration value="WhenHot"/>
+											<xs:enumeration value="Always"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="TextColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="HotTextColor" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Caption" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BrowserControl">
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="AllowFindText" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Display the Find Text window when the user hits Ctrl+F</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="AllowPrint" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Display the Print window when the user hits Ctrl+P</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BorderColor" type="pli:Color" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CodeEditControl">
+		<xs:annotation>
+			<xs:documentation>Used internally for the script editor</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pli:Control">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="HasBorder" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="Template" default="JScript" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="JScript"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ImageElement">
+		<xs:annotation>
+			<xs:documentation>If a width and a height are specified, they act as clipping areas.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pli:Element">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AllowAutoMirror" type="xs:boolean" default="true" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If true, the image will automatically be mirrored (inversed on the X axis) if the parent window is right-to-left.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="AllowAnimate" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>If true, GIF pictures are animated on screen. Not compatible with Colorization or Transparency. Add a solid background color for speed optimization when possible.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Image" type="pli:Image" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The object is valid even without a defined image as the program can assign one itself.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Mosaic" default="Normal" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>To use this property, add a Width and a Height</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Normal"/>
+								<xs:enumeration value="ResizeToFit"/>
+								<xs:enumeration value="HRepeat"/>
+								<xs:enumeration value="VRepeat"/>
+								<xs:enumeration value="HVRepeat"/>
+								<xs:enumeration value="CenterResize"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Colorization" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>When this is enabled, the picture is converted to grayscale then colorized with the specified color.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Color" type="pli:Color"/>
+							</xs:sequence>
+							<xs:attribute name="Enable" type="xs:boolean" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Transparency" default="255" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:unsignedByte">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="255"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="BackgroundColor" type="pli:Color" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PlaceHolderElement">
+		<xs:annotation>
+			<xs:documentation>This element does not display anything.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="pli:Element"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TextElement">
+		<xs:complexContent>
+			<xs:extension base="pli:Element">
+				<xs:sequence>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ProcessHotkey" type="xs:boolean" default="false" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Ampersand characters are used to possibily indicate text shortcuts.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="WrapText" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="Trimming" default="EllipsisChar" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Controls how to display the end of a string that does not fit in the given coordinates.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Character"/>
+											<xs:enumeration value="Word"/>
+											<xs:enumeration value="EllipsisChar"/>
+											<xs:enumeration value="EllipsisWord"/>
+											<xs:enumeration value="EllipsisPath"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Align" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>A width or height must be specified for this parameter to have a meaning.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Horizontal" default="left" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="left"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Vertical" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Only valid when WrapText is false.</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="top"/>
+											<xs:enumeration value="center"/>
+											<xs:enumeration value="bottom"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Color" type="pli:Color" minOccurs="0"/>
+					<xs:element name="Font" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Changes various settings of the default font.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:all>
+								<xs:element name="FaceName" type="xs:string" minOccurs="0"/>
+								<xs:element name="Bold" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Italic" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Underlined" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Strikeout" type="xs:boolean" minOccurs="0"/>
+								<xs:element name="Size" type="xs:double" default="8" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The size is in points.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Text" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="TranslationId"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LineElement">
+		<xs:complexContent>
+			<xs:extension base="pli:Element">
+				<xs:sequence>
+					<xs:annotation>
+						<xs:documentation>The line starts at the upper left corner of the position rectangle and ends at the bottom right.</xs:documentation>
+					</xs:annotation>
+					<xs:element name="Attributes" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AntiAlias" type="xs:boolean" default="true" minOccurs="0"/>
+								<xs:element name="StartCap" default="Square" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Flat"/>
+											<xs:enumeration value="Square"/>
+											<xs:enumeration value="Round"/>
+											<xs:enumeration value="Triangle"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="EndCap" default="Square" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Flat"/>
+											<xs:enumeration value="Square"/>
+											<xs:enumeration value="Round"/>
+											<xs:enumeration value="Triangle"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Size" default="1" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:unsignedInt">
+								<xs:minInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Color" type="pli:Color"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ArrowElement">
+		<xs:complexContent>
+			<xs:extension base="pli:Element">
+				<xs:sequence>
+					<xs:element name="Attributes">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Orientation">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="Left"/>
+											<xs:enumeration value="Right"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Color" type="pli:Color"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FigureElement">
+		<xs:complexContent>
+			<xs:extension base="pli:Element">
+				<xs:sequence>
+					<xs:element name="Figure">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="Rectangle"/>
+								<xs:element name="RoundRect">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Radius" type="xs:unsignedInt" default="8" minOccurs="0"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Ellipse"/>
+								<xs:element name="Custom">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="PathChunk" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Border" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Size" default="1" minOccurs="0">
+									<xs:simpleType>
+										<xs:restriction base="xs:unsignedInt">
+											<xs:minInclusive value="1"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="Color" type="pli:Color"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Fill" minOccurs="0">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="PlainColor" type="pli:Color"/>
+								<xs:element name="LinearGradient">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Color1" type="pli:Color"/>
+											<xs:element name="Color2" type="pli:Color"/>
+										</xs:sequence>
+										<xs:attribute name="Angle" default="0">
+											<xs:annotation>
+												<xs:documentation>Limited to horizontal, vertical and diagonal.</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:int">
+													<xs:minInclusive value="-90"/>
+													<xs:maxInclusive value="90"/>
+													<xs:enumeration value="-90"/>
+													<xs:enumeration value="-45"/>
+													<xs:enumeration value="0"/>
+													<xs:enumeration value="45"/>
+													<xs:enumeration value="90"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="PathGradient">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="CenterColor" type="pli:Color"/>
+											<xs:element name="SurroundColor" type="pli:Color"/>
+											<xs:element name="CenterPoint" minOccurs="0">
+												<xs:complexType>
+													<xs:attribute name="x" type="xs:int"/>
+													<xs:attribute name="y" type="xs:int"/>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="FocusScale" minOccurs="0">
+												<xs:complexType>
+													<xs:attribute name="x">
+														<xs:simpleType>
+															<xs:restriction base="xs:float">
+																<xs:minInclusive value="0"/>
+																<xs:maxInclusive value="1"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+													<xs:attribute name="y">
+														<xs:simpleType>
+															<xs:restriction base="xs:float">
+																<xs:minInclusive value="0"/>
+																<xs:maxInclusive value="1"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:attribute>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Image">
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="pli:Image">
+												<xs:attribute name="MarginX" type="xs:int"/>
+												<xs:attribute name="MarginY" type="xs:int"/>
+											</xs:extension>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PathChunk" abstract="true">
+		<xs:annotation>
+			<xs:documentation>This element is used to defined paths.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="ArcChunk">
+		<xs:complexContent>
+			<xs:extension base="pli:PathChunk">
+				<xs:sequence>
+					<xs:element name="Left" type="xs:int"/>
+					<xs:element name="Top" type="xs:int"/>
+					<xs:element name="Width">
+						<xs:simpleType>
+							<xs:restriction base="xs:unsignedInt">
+								<xs:minInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Height">
+						<xs:simpleType>
+							<xs:restriction base="xs:unsignedInt">
+								<xs:minInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="StartAngle">
+						<xs:annotation>
+							<xs:documentation>Clockwise angle between the horizontal axis of the ellipse and the starting point of the arc.</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="360"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="SweepAngle">
+						<xs:annotation>
+							<xs:documentation>Clockwise angle between the starting point and the ending point of the arc.</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="360"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LineChunk">
+		<xs:complexContent>
+			<xs:extension base="pli:PathChunk">
+				<xs:sequence>
+					<xs:element name="X1" type="xs:int"/>
+					<xs:element name="Y1" type="xs:int"/>
+					<xs:element name="X2" type="xs:int"/>
+					<xs:element name="Y2" type="xs:int"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BezierChunk">
+		<xs:complexContent>
+			<xs:extension base="pli:PathChunk">
+				<xs:sequence>
+					<xs:element name="X1" type="xs:int"/>
+					<xs:element name="Y1" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>Starting point</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="X2" type="xs:int"/>
+					<xs:element name="Y2" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>First control point</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="X3" type="xs:int"/>
+					<xs:element name="Y3" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>Second control point</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="X4" type="xs:int"/>
+					<xs:element name="Y4" type="xs:int">
+						<xs:annotation>
+							<xs:documentation>Ending point</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:attributeGroup name="ScreenPos">
+		<xs:annotation>
+			<xs:documentation>Use this group to specify a fixed size for the window's frame.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Width" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="Height" type="xs:unsignedInt" use="optional"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="ClientPos">
+		<xs:annotation>
+			<xs:documentation>Use this group to specify the size of the client area of the window. New versions should always use this by default.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ClientWidth" type="xs:unsignedInt" use="optional"/>
+		<xs:attribute name="ClientHeight" type="xs:unsignedInt" use="optional"/>
+	</xs:attributeGroup>
+</xs:schema>
